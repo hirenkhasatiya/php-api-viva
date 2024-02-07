@@ -7,7 +7,6 @@
         private $PSW = "";
         private $DB_NAME = "php-viva";
         private $table_name = "library";
-        private $t_name = "book";
         public $connect;                               
 
         public function __construct() {
@@ -22,7 +21,7 @@
 
         public function insert($book_name) {
 
-            $query = "INSERT INTO $this->t_name (book_name) VALUES ($book_name)";
+            $query = "INSERT INTO book(book_name) VALUES ('$book_name')";
 
             $res = mysqli_query($this->connect,$query); 
 
@@ -30,7 +29,7 @@
 
         }
 
-        public function insertfk($id,$name,$b_id) {
+        public function insertfk($name,$b_id) {
 
             $q = "SELECT * FROM book WHERE book_id IN ('$b_id')";
 
@@ -39,8 +38,8 @@
             if(mysqli_num_rows($r) == 1) {
 
                 if($r) {
-                     $query = "INSERT INTO library(id,name,b_id) VALUES('$id','$name','$b_id')";
-                     $res = mysqli_query($this->conn,$query); 
+                     $query = "INSERT INTO library(name,b_id) VALUES('$name','$b_id')";
+                     $res = mysqli_query($this->connect,$query); 
                      return "book is Match Insert Success !!";
                 }
 
@@ -51,27 +50,31 @@
 
         }
 
-        // public function getAllData() {
+        public function getAllData() {
 
-        //     $query = "SELECT * FROM $this->table_name";
+            $query = "SELECT * FROM book";
 
-        //     $res = mysqli_query($this->conn,$query);  
+            $res = mysqli_query($this->connect,$query);  
             
-        //     return $res;
+            return $res;
 
-        // }
+        }
 
-        // public function delete($id) {
-        //     $query = "DELETE FROM $this->table_name WHERE id=$id";
-        //     return mysqli_query($this->conn,$query);   
-        // }
+        public function update($id,$name,$b_id) {
+            $query = "UPDATE $this->table_name SET name='$name',b_id=$b_id WHERE id=$id";
+            $res = mysqli_query($this->connect,$query);
+            return $res ? "$id updated..." : "$id failed to update...";
+        }
 
-        // public function update($id,$name,$age,$course) {
-        //     $query = "UPDATE $this->table_name SET name='$name',age=$age,course='$course' WHERE id=$id";
-        //     $res = mysqli_query($this->conn,$query);
-        //     print_r($res);
-        // }
+        public function getSingleData($id) {
+            $query = "SELECT * FROM $this->table_name WHERE id=$id";
+            return mysqli_query($this->connect,$query);
+        }
 
+        public function delete($id) {
+            $query = "DELETE FROM $this->table_name WHERE id=$id";
+            return mysqli_query($this->connect,$query);  
+        }
     }
 
 ?>
